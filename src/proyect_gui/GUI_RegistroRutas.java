@@ -313,8 +313,10 @@ public class GUI_RegistroRutas extends javax.swing.JFrame {
         ruta.setHora_Ruta(hora_r);
         ruta.setFecha_Ruta(fecha_r);
         metodos.guardarRutas(ruta);
-        metodos.guardarArchivoRutas(ruta);
-        table_rutas.setModel(metodos.listaRutas());
+        int inf = metodos.guardarArchivoRutas(ruta);
+        if(inf == 1){    
+            table_rutas.setModel(metodos.listaRutas());
+        }
     }//GEN-LAST:event_btn_r_guardarActionPerformed
 
     private void btn_r_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_r_salirActionPerformed
