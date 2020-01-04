@@ -3,10 +3,12 @@ package proyect_metodos;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.swing.JOptionPane;
@@ -56,6 +58,7 @@ public class MetodoRutas {
         }
         return inf;
     }
+    
     //mostrar los datos en el jtable
     public DefaultTableModel listaRutas(){
         
@@ -128,9 +131,42 @@ public class MetodoRutas {
     }
     
     
-    public void EliminarRutas() {
-           
-        //FALTA
+    public void EliminarRutas(String idRuta) {
+        int cont = 1;
+        try{
+            FileReader fr = new FileReader(dirPath);
+            BufferedReader br = new BufferedReader(fr);
+            String d;
+            Vector x = new Vector();
+            while ((d=br.readLine())!=null){
+                
+                StringTokenizer dato = new StringTokenizer(d,"|");
+                
+                if(dato.hasMoreTokens()){
+                    String a = dato.nextToken();
+                    if(a.equals(idRuta)){
+                        System.out.print(d);
+                    }else{
+                        x.addElement(d);
+                        System.out.print(d);
+                    }
+                }
+            }
+            fr.close();
+            br.close();
+            
+            FileWriter fw = new FileWriter (dirPath, false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+            Enumeration vEnum = x.elements();
+            while(vEnum.hasMoreElements())
+                pw.println(vEnum.nextElement());
+            pw.close();
+            
+            
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
     
     

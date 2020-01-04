@@ -1,10 +1,14 @@
 package proyect_gui;
 
+import java.io.IOException;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import java.util.Date;
 import proyect_clases.Rutas;
 import proyect_metodos.MetodoRutas;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 public class GUI_RegistroRutas extends javax.swing.JFrame {
 
@@ -225,14 +229,14 @@ public class GUI_RegistroRutas extends javax.swing.JFrame {
             }
         });
 
-        btn_r_eliminar.setText("Editar");
+        btn_r_eliminar.setText("Eliminar");
         btn_r_eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_r_eliminarActionPerformed(evt);
             }
         });
 
-        btn_r_actializar.setText("Eliminar");
+        btn_r_actializar.setText("Editar");
         btn_r_actializar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_r_actializarActionPerformed(evt);
@@ -294,31 +298,75 @@ public class GUI_RegistroRutas extends javax.swing.JFrame {
 
     private void btn_r_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_r_guardarActionPerformed
         // TODO add your handling code here:
-
         mdlTablaR = new DefaultTableModel();
-
-        int id_r = Integer.parseInt(txt_r_id.getText());
-        String nombre_r = txt_r_nombre.getText();
-        String origen_r = txt_r_origen.getText();
-        String destino_r = txt_r_destino.getText();
-        String costo_r = txt_r_costo.getText();
-        String hora_r = txt_r_hora.getText();
-        String fecha_r = txt_r_fecha.getText();
         
-        ruta.setId_Ruta(id_r);
-        ruta.setNombre_Ruta(nombre_r);
-        ruta.setOrigen_Ruta(origen_r);
-        ruta.setDestino_Ruta(destino_r);
-        ruta.setCosto_Ruta(costo_r);
-        ruta.setHora_Ruta(hora_r);
-        ruta.setFecha_Ruta(fecha_r);
-        metodos.guardarRutas(ruta);
-        int info = metodos.guardarArchivoRutas(ruta);
-        if(info == 1){    
-            table_rutas.setModel(metodos.listaRutas());
+        int control = 0;
+        int id_r = 0;
+        try {
+            id_r = Integer.parseInt(txt_r_id.getText());
+            control = 1;
+        } catch (NumberFormatException f) {
+            JOptionPane.showMessageDialog(null, "Debe Ingresar solo numero en el capo Id Ruta");
+        }
+        
+        if(control == 1 && id_r != 0){
+            String nombre_r = txt_r_nombre.getText();
+            if("".equals(nombre_r.trim())){
+                JOptionPane.showMessageDialog(null, "Debe ingresar el nombre de la ruta para continuar");
+                return;
+            }
+            
+            String origen_r = txt_r_origen.getText();
+            if("".equals(origen_r.trim())){
+                JOptionPane.showMessageDialog(null, "Debe ingresar el origen de la ruta para continuar");
+                return;
+            }
+            
+            String destino_r = txt_r_destino.getText();
+            if("".equals(destino_r.trim())){
+                JOptionPane.showMessageDialog(null, "Debe ingresar el destino de la ruta para continuar");
+                return;
+            }
+            
+            String costo_r = txt_r_costo.getText();
+            if("".equals(costo_r.trim())){
+                JOptionPane.showMessageDialog(null, "Debe ingresar el costo de la ruta para continuar");
+                return;
+            }
+            
+            String hora_r = txt_r_hora.getText();
+            if("".equals(hora_r.trim())){
+                JOptionPane.showMessageDialog(null, "Debe ingresar el hora de la ruta para continuar");
+                return;
+            }
+            
+            String fecha_r = txt_r_fecha.getText();
+            if("".equals(fecha_r.trim())){
+                JOptionPane.showMessageDialog(null, "Debe ingresar el fecha de la ruta para continuar");
+                return;
+            }
+
+            ruta.setId_Ruta(id_r);
+            ruta.setNombre_Ruta(nombre_r);
+            ruta.setOrigen_Ruta(origen_r);
+            ruta.setDestino_Ruta(destino_r);
+            ruta.setCosto_Ruta(costo_r);
+            ruta.setHora_Ruta(hora_r);
+            ruta.setFecha_Ruta(fecha_r);
+            metodos.guardarRutas(ruta);
+            int info = metodos.guardarArchivoRutas(ruta);
+            if(info == 1){    
+                table_rutas.setModel(metodos.listaRutas());
+            }
+        }
+        
+        if(id_r == 0){
+            JOptionPane.showMessageDialog(null, "Debe ingresar un numero diferente de Cero o Nulo.");
         }
     }//GEN-LAST:event_btn_r_guardarActionPerformed
 
+    
+    
     private void btn_r_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_r_salirActionPerformed
         // TODO add your handling code here:
         GUI_Principal b = new GUI_Principal();
@@ -339,10 +387,17 @@ public class GUI_RegistroRutas extends javax.swing.JFrame {
 
     private void btn_r_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_r_eliminarActionPerformed
         // Boton eliminar pasajeros en tabla:
+        int p = table_rutas.getSelectedRow();
+        //System.out.print(Integer.toString(p));
+        //System.out.print(table_rutas.getModel().getValueAt(p, 0));
+        String idRuta = (String) table_rutas.getModel().getValueAt(p, 0);
+        metodos.EliminarRutas(idRuta);
+        table_rutas.setModel(metodos.listaRutas());
     }//GEN-LAST:event_btn_r_eliminarActionPerformed
 
     private void btn_r_actializarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_r_actializarActionPerformed
         // Carga los datos del archivo de texto con la base de datos de pasajeros:
+        
         table_rutas.setModel(metodos.listaRutas());
     }//GEN-LAST:event_btn_r_actializarActionPerformed
 
